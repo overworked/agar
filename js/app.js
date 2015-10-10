@@ -20,7 +20,7 @@ class App extends Component {
 					<TextField
 					  hintText="Display Name"
 					  floatingLabelText="Enter a display name"
-						ref="displayNameField" />
+						ref="displayNameField" style={{marginRight: '2px', marginTop: '2px'}}/>
 					<RaisedButton onClick={this.onClickJoin.bind(this)} label="Join Game" primary={true} />
 				</div>
 			</div>
