@@ -13,6 +13,7 @@ var minifyCss = require('gulp-minify-css');
 var gulpif = require('gulp-if');
 var connect = require('gulp-connect');
 var open = require('gulp-open');
+var ghPages = require('gulp-gh-pages');
 
 var config = {
 	HTML: 'index.html',
@@ -135,6 +136,13 @@ gulp.task('open', ['connect'], function() {
 	return gulp.src(config.ENTRY_HTML)
 		.pipe(gulp.dest(config.DEST))
 		.pipe(connect.reload());
+});
+
+gulp.task('deploy', function() {
+  return gulp.src('./build/**/*')
+    .pipe(ghPages({
+        branch: 'gh-pages'
+    }));
 });
 
 gulp.task('prod', ['html_prod', 'css_prod', 'js_prod']);
