@@ -53,7 +53,7 @@ export default class Map extends Component {
 						name: 'Andy',
 						radius: 2,
 						colour: 'red',
-						location: [37.8706078,-122.2517215]
+						location: [37.870570,-122.2514415]
 					}
 				},
 				{
@@ -80,6 +80,29 @@ export default class Map extends Component {
 				obj[item.meta.name].marker = marker;
 				return obj;
 			}, {} )});
+
+			var success = (pos) => { this.setState(
+				{
+					position: {
+						longitude: pos.coords.longitude,
+						latitude: pos.coords.latitude
+					}
+				});
+
+				for (var player1 in this.state.players) {
+					for (var player2 in this.state.players) {
+						if (this.state.players[player1].radius > this.state.players[player2].radius) {
+							if (detectCollision(this.state.players[player1], this.state.players[player2])) {
+								// TODO: collision logic
+							}
+						}
+					}
+				}
+			};
+
+			navigator.geolocation.getCurrentPosition(success, null, {
+				enableHighAccuracy: true
+			});
 		}
 
 		xhr.setRequestHeader("X-mmx-app-id", "7yyifl20zg2");
@@ -100,14 +123,6 @@ export default class Map extends Component {
 		map.objects.add(marker);
 
 		window.setInterval(() => {
-			var success = (pos) => { this.setState({position: {
-				longitude: pos.coords.longitude,
-				latitude: pos.coords.latitude
-			}}) };
-			navigator.geolocation.getCurrentPosition(success, null, {
-				enableHighAccuracy: true
-			});
-
 		 	this.sendSelfLocation();
 			this.retrieveOthersLocations();
 
@@ -122,6 +137,11 @@ export default class Map extends Component {
 	render() {
 		return <div id='mapContainer' />;
 	}
+}
+
+function detectCollision(biggerPlayer, smallerPlayer) {
+  var distanceAB = biggerPlayer.marker.center.distance(smallerPlayer.marker.center);
+	return biggerPlayer.radius >= distanceAB + 0.4 * smallerPlayer.radius;
 }
 
 function createCORSRequest(method, url) {
