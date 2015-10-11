@@ -65,13 +65,21 @@ export default class Map extends Component {
 						name: 'Andy',
 						radius: 2,
 						colour: 'red',
-						location: [37.870570,-122.2514415]
+						location: [37.870540,-122.2514415]
 					}
 				},
 				{
 					meta: {
 						name: 'Clemmy',
 						radius: 3,
+						colour: 'green',
+						location: [37.8704078,-122.2515215]
+					}
+				},
+				{
+					meta: {
+						name: 'eatMe',
+						radius: 1,
 						colour: 'green',
 						location: [37.8704078,-122.2515215]
 					}
@@ -101,14 +109,25 @@ export default class Map extends Component {
 					}
 				});
 
-				for (var player1 in this.state.players) {
-					for (var player2 in this.state.players) {
-						if (this.state.players[player1].radius > this.state.players[player2].radius) {
-							if (detectCollision(this.state.players[player1], this.state.players[player2])) {
-								this.state.players[player2].marker.destroy();
+				var selfPlayer = {
+					name: Store.data.username,
+					radius: this.state.radius,
+					colour: this.state.colour,
+					location: [this.state.position.latitude, this.state.position.longitude],
+					marker: this.state.marker
+				};
+				for (var player in this.state.players) {
+					// for (var player2 in this.state.players) {
+						// if (this.state.players[player1].radius > this.state.players[player2].radius) {
+							if (detectCollision(selfPlayer, this.state.players[player])) {
+								this.state.players[player].marker.destroy();
+								// this.state.radius += this.state.players[player].radius;
+								this.setState({
+									radius: this.state.players[player].radius
+								});
 							}
-						}
-					}
+						// }
+					// }
 				}
 			};
 
