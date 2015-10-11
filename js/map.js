@@ -8,22 +8,54 @@ export default class Map extends Component {
 		super(props);
 		this.state = {
 			zoomLevel: 20,
-			center: [52.51, 13.4]
+			position: {
+				longitude: 0,
+				latitude: 0
+			},
+			map: null,
+			marker: null
 		};
+
+		setInterval(() => {
+			var success = (pos) => { this.setState({position: {
+				longitude: pos.coords.longitude,
+				latitude: pos.coords.latitude
+			}}) };
+			navigator.geolocation.getCurrentPosition(success, null, {
+				enableHighAccuracy: true
+			});
+		}, 100);
 	}
 	componentDidMount() {
-		var map = new nokia.maps.map.Display(
+		var coords = new nokia.maps.geo.Coordinate(this.state.position.latitude, this.state.position.longitude);
+
+		let map = new nokia.maps.map.Display(
 			document.getElementById('mapContainer'), {
 				zoomLevel: this.state.zoomLevel,
-				center: this.state.center
+				center: coords
 			}
 		);
-		var marker = new nokia.maps.map.Circle([52.51, 13.4], 3, {precision: 100, brush: {color: 'rgba(255, 252, 50, 0.7)'}, pen: {lineWidth: 0}});
+		let marker = new nokia.maps.map.Circle(coords, 3, {precision: 100, brush: {color: 'rgba(255, 252, 50, 0.7)'}, pen: {lineWidth: 0}});
+
 		map.objects.add(marker);
+
+		this.setState({map, marker});
 	}
 	render() {
+		var coords = new nokia.maps.geo.Coordinate(this.state.position.latitude, this.state.position.longitude);
+
+		if (this.state.map) {
+				this.state.map.setCenter(coords);
+		}
+
+		if (this.state.marker) {
+				this.state.marker.set('center', coords);
+		}
+
 		return (
-			<div id='mapContainer' />
+			<div>
+				<div id='mapContainer' />
+			</div>
 		);
 	}
 }
