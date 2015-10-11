@@ -3,17 +3,24 @@ import React, { Component } from 'react';
 nokia.Settings.set('app_id', 'gg7K9ZNHGDxtTjp04GO7');
 nokia.Settings.set('app_code', 'y5vrY3rXNdVVd9eT_G1K7w');
 
+let colors = [
+	'rgba(50, 255, 255, 0.7)',
+	'rgba(255, 50, 255, 0.7)',
+	'rgba(255, 255, 50, 0.7)'
+]
+
 export default class Map extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			zoomLevel: 20,
 			position: {
 				longitude: 0,
 				latitude: 0
 			},
 			map: null,
-			marker: null
+			marker: null,
+			radius: 3,
+			color: colors[Math.floor(Math.random()*3)]
 		};
 
 		setInterval(() => {
@@ -31,7 +38,7 @@ export default class Map extends Component {
 
 		let map = new nokia.maps.map.Display(
 			document.getElementById('mapContainer'), {
-				zoomLevel: this.state.zoomLevel,
+				zoomLevel: 20,
 				center: coords
 			}
 		);
