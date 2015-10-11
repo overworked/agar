@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import Store from './store.js';
+import $ from 'jquery';
 
 nokia.Settings.set('app_id', 'gg7K9ZNHGDxtTjp04GO7');
 nokia.Settings.set('app_code', 'y5vrY3rXNdVVd9eT_G1K7w');
@@ -25,13 +27,23 @@ export default class Map extends Component {
 		};
 	}
 	sendSelfLocation() {
-		// var url = 'http://jsonp.afeld.me/?url=https://prod-mmx-001.magnet.com:5221/mmxmgmt/api/v1/topics/agar.me/publish';
-
-		// var xhr = createCORSRequest('POST', url);
-
-		// xhr.setRequestHeader("X-mmx-app-id", "7yyifl20zg2");
-		// xhr.setRequestHeader("X-mmx-api-key", "f6526236-eac9-4f17-ae53-81ca2564840a")
-		// xhr.send();
+		var url = 'http://localhost:3000/api/publish';
+		$.ajax({
+		  type: "POST",
+		  url: url,
+			data: {
+				content: {
+					name: Store.data.username,
+					location: [this.state.position.latitude, this.state.position.longitude],
+					radius: this.state.radius,
+					colour: this.state.color
+				}
+			},
+		  success: function() {
+				console.log('done');
+			},
+			dataType: 'json'
+		});
 	}
 	retrieveOthersLocations(){
 		var url = 'http://jsonp.afeld.me/?url=https://prod-mmx-001.magnet.com:5221/mmxmgmt/api/v1/topics/agar.me/items&size=200';
