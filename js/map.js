@@ -3,35 +3,70 @@ import React, { Component } from 'react';
 nokia.Settings.set('app_id', 'gg7K9ZNHGDxtTjp04GO7');
 nokia.Settings.set('app_code', 'y5vrY3rXNdVVd9eT_G1K7w');
 
-var debug = 0;
-var debug2 = 0;
+let colors = [
+	'rgba(50, 255, 255, 0.7)',
+	'rgba(255, 50, 255, 0.7)',
+	'rgba(255, 255, 50, 0.7)'
+]
 
 export default class Map extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			zoomLevel: 20,
-			center: [52.51, 13.4]
+			position: {
+				longitude: 0,
+				latitude: 0
+			},
+			map: null,
+			marker: null,
+			radius: 3,
+			color: colors[Math.floor(Math.random()*3)]
 		};
+
+		setInterval(() => {
+			var success = (pos) => { this.setState({position: {
+				longitude: pos.coords.longitude,
+				latitude: pos.coords.latitude
+			}}) };
+			navigator.geolocation.getCurrentPosition(success, null, {
+				enableHighAccuracy: true
+			});
+		}, 100);
 	}
 	componentDidMount() {
-		var map = new nokia.maps.map.Display(
+		var coords = new nokia.maps.geo.Coordinate(this.state.position.latitude, this.state.position.longitude);
+
+		let map = new nokia.maps.map.Display(
 			document.getElementById('mapContainer'), {
-				zoomLevel: this.state.zoomLevel,
-				center: this.state.center
+				zoomLevel: 20,
+				center: coords
 			}
 		);
-		var marker = new nokia.maps.map.Circle([52.51, 13.4], 3, {precision: 100, brush: {color: 'rgba(255, 252, 50, 0.7)'}, pen: {lineWidth: 0}});
+		let marker = new nokia.maps.map.Circle(coords, 3, {precision: 100, brush: {color: 'rgba(255, 252, 50, 0.7)'}, pen: {lineWidth: 0}});
+
 		map.objects.add(marker);
 
 		window.setInterval(function(){
 			retrieveOthersLocations();
 		 	sendSelfLocation();
 		}, 2000);
+		this.setState({map, marker});
 	}
 	render() {
+		var coords = new nokia.maps.geo.Coordinate(this.state.position.latitude, this.state.position.longitude);
+
+		if (this.state.map) {
+				this.state.map.setCenter(coords);
+		}
+
+		if (this.state.marker) {
+				this.state.marker.set('center', coords);
+		}
+
 		return (
-			<div id='mapContainer' />
+			<div>
+				<div id='mapContainer' />
+			</div>
 		);
 	}
 }
