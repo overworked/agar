@@ -19,7 +19,7 @@ export default class Map extends Component {
 			},
 			map: null,
 			marker: null,
-			radius: 3,
+			radius: 1,
 			color: colors[Math.floor(Math.random()*3)],
 			players: {}
 		};
@@ -59,7 +59,7 @@ export default class Map extends Component {
 				{
 					meta: {
 						name: 'Clemmy',
-						radius: 1,
+						radius: 3,
 						colour: 'green',
 						location: [37.8704078,-122.2515215]
 					}
@@ -95,7 +95,7 @@ export default class Map extends Component {
 				center: coords
 			}
 		);
-		let marker = new nokia.maps.map.Circle(coords, 3, {precision: 100, brush: {color: this.state.color}, pen: {lineWidth: 0}});
+		let marker = new nokia.maps.map.Circle(coords, this.state.radius, {precision: 100, brush: {color: this.state.color}, pen: {lineWidth: 0}});
 
 		map.objects.add(marker);
 
