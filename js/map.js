@@ -93,7 +93,7 @@ export default class Map extends Component {
 					for (var player2 in this.state.players) {
 						if (this.state.players[player1].radius > this.state.players[player2].radius) {
 							if (detectCollision(this.state.players[player1], this.state.players[player2])) {
-								// TODO: collision logic
+								this.state.players[player2].marker.destroy();
 							}
 						}
 					}
